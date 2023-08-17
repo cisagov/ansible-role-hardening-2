@@ -113,9 +113,6 @@
 - name: Configure compiler permissions
   ansible.builtin.include_tasks: compilers.yml
 
-- name: Set umask
-  ansible.builtin.include_tasks: umask.yml
-
 - name: Configure paths
   ansible.builtin.include_tasks: path.yml
 
@@ -142,6 +139,9 @@
 
 - name: Configure sudo
   ansible.builtin.include_tasks: sudo.yml
+
+- name: Set umask
+  ansible.builtin.include_tasks: umask.yml
 
 - name: Miscellaneous extra tasks
   ansible.builtin.include_tasks: extras.yml
