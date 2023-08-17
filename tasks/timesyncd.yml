@@ -4,11 +4,18 @@
   ansible.builtin.package:
     name: systemd-timesyncd
     state: present
+  when: ansible_os_family == "Debian"  
   tags:
     - systemd
     - timesyncd
     - CIS-UBUNTU2004-2.1.1.1
     - CIS-UBUNTU2004-2.1.1.2
+
+- name: Stat systemd timesyncd
+  become: true
+  ansible.builtin.stat:
+    path: /etc/systemd/timesyncd.conf
+  register: timesyncd   
 
 - name: Configure systemd timesyncd
   become: true
@@ -19,6 +26,7 @@
     mode: "0644"
     owner: root
     group: root
+  when: timesyncd.stat.exists  
   notify:
     - Reload systemd
   tags:
@@ -34,6 +42,7 @@
     enabled: true
     masked: false
     state: started
+  when: timesyncd.stat.exists  
   tags:
     - systemd
     - timesyncd
