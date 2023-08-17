@@ -17,8 +17,8 @@ LOGIN_TIMEOUT 60
 LOG_OK_LOGINS yes
 LOG_UNKFAIL_ENAB no
 MAIL_DIR /var/mail
-PASS_MAX_DAYS 60
-PASS_MIN_DAYS 1
+PASS_MAX_DAYS 365
+PASS_MIN_DAYS 7
 {% if ansible_distribution == "CentOS" %}
 PASS_MIN_LEN 15
 {% endif %}
