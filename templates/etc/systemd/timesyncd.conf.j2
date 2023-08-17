@@ -1,8 +1,8 @@
 # {{ ansible_managed }}
 
 [Time]
-NTP={{ ntp }}
-FallbackNTP={{ fallback_ntp }}
+NTP={{ aws_ntp }}
+FallbackNTP={{ aws_fallback_ntp }}
 {% if ansible_local.systemd.version|int >= 236 %}
 RootDistanceMaxSec=1
 {% endif %}
