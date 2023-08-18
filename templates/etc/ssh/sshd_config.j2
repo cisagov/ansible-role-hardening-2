@@ -9,7 +9,9 @@ AllowTcpForwarding {{ sshd_allow_tcp_forwarding }}
 AuthenticationMethods {{ sshd_authentication_methods }}
 Banner {{ sshd_banner }}
 ChallengeResponseAuthentication {{ sshd_challenge_response_authentication }}
+{% if ansible_os_family != 'RedHat' %}
 Ciphers {{ sshd_ciphers | replace(', ', ',') }}
+{% endif %}
 ClientAliveCountMax {{ sshd_client_alive_count_max | int }}
 ClientAliveInterval {{ sshd_client_alive_interval | int }}
 Compression {{ sshd_compression }}
@@ -19,10 +21,14 @@ HostbasedAuthentication {{ sshd_hostbased_authentication }}
 IgnoreRhosts {{ sshd_ignore_rhosts }}
 IgnoreUserKnownHosts {{ sshd_ignore_user_known_hosts }}
 KerberosAuthentication {{ sshd_kerberos_authentication }}
+{% if ansible_os_family != 'RedHat' %}
 KexAlgorithms {{ sshd_kex_algorithms | replace(', ', ',') }}
+{% endif %}
 LogLevel {{ sshd_log_level }}
 LoginGraceTime {{ sshd_login_grace_time | int }}
+{% if ansible_os_family != 'RedHat' %}
 MACs {{ sshd_macs | replace(', ', ',') }}
+{% endif %}
 MaxAuthTries {{ sshd_max_auth_tries | int }}
 MaxSessions {{ sshd_max_sessions | int }}
 MaxStartups {{ sshd_max_startups }}
