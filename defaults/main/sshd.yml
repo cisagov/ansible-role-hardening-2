@@ -56,7 +56,6 @@ sshd_permit_user_environment: "no"
 sshd_port: 22
 sshd_print_last_log: "yes"
 sshd_print_motd: "no"
-sshd_protocol: 2
 sshd_rekey_limit: 512M 1h
 sshd_required_rsa_size: 2048
 sshd_strict_modes: "yes"
