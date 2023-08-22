@@ -8,13 +8,13 @@
 - name: Install epel-release and python dependencies
   ansible.builtin.include_tasks: pre.yml
 
-- name: Install and configure UFW
-  ansible.builtin.include_tasks:
-    file: ufw.yml
-    apply:
-      environment:
-        PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-  when: ufw_enable
+# - name: Install and configure UFW
+#   ansible.builtin.include_tasks:
+#     file: ufw.yml
+#     apply:
+#       environment:
+#         PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#   when: ufw_enable
 
 - name: Configure sysctl
   ansible.builtin.include_tasks: sysctl.yml
