@@ -35,6 +35,7 @@ packages_debian:
   # - libpam-apparmor
   # - libpam-cap
   # - libpam-modules
+  # We are only installing this package as it provides /etc/security/pwquality.conf
   - libpam-pwquality
   # - libpam-tmpdir
   # - lsb-release
@@ -55,7 +56,8 @@ packages_redhat:
   # - gnupg2
   # - haveged
   # - libpwquality
-  # - openssh-server
+  # We are listing this as we can't have null values
+  - openssh-server
   # - needrestart
   # - postfix
   # - psacct
@@ -68,4 +70,5 @@ packages_redhat:
 packages_ubuntu:
   # - fwupd
   # - secureboot-db
-  # - snapd
+  # We are listing this as we can't have null values
+  - snapd
