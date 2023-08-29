@@ -81,8 +81,8 @@
 # - name: Disable systemd ctrl-alt-del.target
 #   ansible.builtin.include_tasks: ctrlaltdel.yml
 
-# - name: Configure auditd
-#   ansible.builtin.include_tasks: auditd.yml
+- name: Configure auditd
+  ansible.builtin.include_tasks: auditd.yml
 
 - name: Configure AppArmor
   ansible.builtin.include_tasks: apparmor.yml
