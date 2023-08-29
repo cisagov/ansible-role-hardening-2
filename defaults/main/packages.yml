@@ -52,12 +52,11 @@ packages_debian:
 packages_redhat:
   # - audispd-plugins
   # - audit
-  # - cracklib
+  - cracklib
   # - gnupg2
   # - haveged
-  # - libpwquality
-  # We are listing this as we can't have null values
-  - openssh-server
+  - libpwquality
+  # - openssh-server
   # - needrestart
   # - postfix
   # - psacct
