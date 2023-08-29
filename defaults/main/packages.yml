@@ -28,7 +28,7 @@ packages_debian:
   # - apt-show-versions
   # - audispd-plugins
   # - auditd
-  # - cracklib-runtime
+  - cracklib-runtime
   # - debsums
   # - gnupg2
   # - haveged
