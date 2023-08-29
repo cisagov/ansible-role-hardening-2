@@ -27,7 +27,7 @@ packages_debian:
   # - apparmor-utils
   # - apt-show-versions
   # - audispd-plugins
-  # - auditd
+  - auditd
   - cracklib-runtime
   # - debsums
   # - gnupg2
@@ -51,7 +51,7 @@ packages_debian:
   # - wamerican
 packages_redhat:
   # - audispd-plugins
-  # - audit
+  - audit
   - cracklib
   # - gnupg2
   # - haveged
