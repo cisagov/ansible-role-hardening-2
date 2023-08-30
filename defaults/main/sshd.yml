@@ -25,8 +25,8 @@ sshd_ciphers: >-
   aes256-ctr,
   aes192-ctr,
   aes128-ctr
-sshd_client_alive_count_max: 0
-sshd_client_alive_interval: 300
+sshd_client_alive_count_max: 3
+sshd_client_alive_interval: 15
 sshd_compression: "no"
 sshd_gssapi_authentication: "no"
 sshd_gssapi_kex_algorithms: >-
