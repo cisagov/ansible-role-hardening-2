@@ -69,12 +69,6 @@
 - name: Configure needrestart, install and remove various packages
   ansible.builtin.include_tasks: packages.yml
 
-- name: Configure ssh server and client
-  ansible.builtin.include_tasks: sshconfig.yml
-
-- name: Configure PAM
-  ansible.builtin.include_tasks: password.yml
-
 - name: Configure and clean at and cron
   ansible.builtin.include_tasks: cron.yml
 
@@ -102,6 +96,12 @@
     (not (ansible_os_family == "Debian" and
     (ansible_lsb.codename == "groovy" or
     ansible_lsb.codename == "hirsute")))
+
+- name: Configure ssh server and client
+  ansible.builtin.include_tasks: sshconfig.yml
+
+- name: Configure PAM
+  ansible.builtin.include_tasks: password.yml
 
 # - name: Manage users
 #   ansible.builtin.include_tasks: users.yml
