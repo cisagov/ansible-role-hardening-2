@@ -77,7 +77,7 @@
     - /usr/sbin/aureport
     - /usr/sbin/autrace
     - /usr/sbin/augenrules
-    - /usr/sbin/audispd
+    # - /usr/sbin/audispd # This is not required for CIS Benchmarks, so we won't be installing audispd
   tags:
     - aide
 
