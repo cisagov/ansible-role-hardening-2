@@ -1,6 +1,7 @@
 ---
-# We are disabling AIDE install for now for debugging and testing. Will reenable later.
 install_aide: true
+aide_checksums:
+  - sha512
 reboot_ubuntu: false
 redhat_signing_keys:
   - 567E347AD0044ADE55BA8A5F199E2F91FD431D51

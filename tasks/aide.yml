@@ -81,6 +81,19 @@
   tags:
     - aide
 
+# This reduces the time needed for AIDE init
+- name: Limit AIDE checksums
+  become: true
+  ansible.builtin.lineinfile:
+    regexp: ^Checksums =
+    line: Checksums = {{ aide_checksums }}
+    dest: "{{ '/etc/aide/aide.conf' if ansible_os_family == 'Debian' else '/etc/aide.conf' }}"
+    mode: "0640"
+    state: present
+    create: false
+  tags:
+    - aide
+
 - name: Add AIDE dir exclusions
   become: true
   ansible.builtin.blockinfile:
