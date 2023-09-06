@@ -85,11 +85,11 @@
 - name: Configure AIDE checksums
   become: true
   ansible.builtin.lineinfile:
+    dest: "{{ '/etc/aide/aide.conf' if ansible_os_family == 'Debian' else '/etc/aide.conf' }}"
+    state: present
     regexp: ^Checksums =
     line: Checksums = {{ aide_checksums }}
-    dest: "{{ '/etc/aide/aide.conf' if ansible_os_family == 'Debian' else '/etc/aide.conf' }}"
     mode: "0640"
-    state: present
     create: false
     validate: aide --config-check --config=%s
   tags:
