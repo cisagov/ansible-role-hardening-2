@@ -82,8 +82,7 @@
   tags:
     - aide
 
-# This reduces the time needed for AIDE init
-- name: Limit AIDE checksums
+- name: Configure AIDE checksums
   become: true
   ansible.builtin.lineinfile:
     regexp: ^Checksums =
