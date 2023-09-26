@@ -12,8 +12,8 @@ Available on
 [AlmaLinux 8](https://wiki.almalinux.org/release-notes/#almalinux-8),
 [AlmaLinux 9](https://wiki.almalinux.org/release-notes/#almalinux-9),
 [Debian 11](https://www.debian.org/releases/bullseye/),
-Ubuntu [20.04 LTS (Focal Fossa)](https://releases.ubuntu.com/focal/) and
-[22.04 LTS (Jammy Jellyfish)](https://releases.ubuntu.com/jammy/) are supported.
+[Ubuntu 20.04 LTS (Focal Fossa)](https://releases.ubuntu.com/focal/) and
+[Ubuntu 22.04 LTS (Jammy Jellyfish)](https://releases.ubuntu.com/jammy/) are supported.
 
 > **Note**
 >
@@ -104,6 +104,21 @@ See [TESTING.md](TESTING.md).
 
 ## Role Variables with defaults
 
+### ./defaults/main/aide.yml
+
+```yaml
+install_aide: true
+aide_checksums: sha512
+```
+
+If `install_aide: true` then [AIDE](https://aide.github.io/) will be installed
+and configured.
+
+`aide_checksums` modifies the AIDE `Checksums` variable. Note that the
+`Checksums` variable might not be present depending on distribution.
+
+[aide.conf(5)](https://linux.die.net/man/5/aide.conf)
+
 ### ./defaults/main/auditd.yml
 
 ```yaml
@@ -170,6 +185,16 @@ compilers:
 
 List of compilers that will be restricted to the root user.
 
+### ./defaults/main/crypto_policies.yml
+
+```yaml
+set_crypto_policy: true
+crypto_policy: DEFAULT:NO-SHA1
+```
+
+Set and use [cryptographic policies](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/security_hardening/using-the-system-wide-cryptographic-policies_security-hardening)
+if `/etc/crypto-policies/config` exists and `set_crypto_policy: true`.
+
 ### ./defaults/main/disablewireless.yml
 
 ```yaml
@@ -223,7 +248,6 @@ Maximum number of processes and open files.
 ### ./defaults/main/misc.yml
 
 ```yaml
-install_aide: true
 reboot_ubuntu: false
 redhat_signing_keys:
   - 567E347AD0044ADE55BA8A5F199E2F91FD431D51
@@ -235,9 +259,6 @@ epel8_signing_keys:
 epel9_signing_keys:
   - FF8AD1344597106ECE813B918A3872BF3228467C
 ```
-
-If `install_aide: true` then [AIDE](https://aide.github.io/) will be installed
-and configured.
 
 If `reboot_ubuntu: true` an Ubuntu node will be rebooted if required.
 
@@ -292,17 +313,16 @@ of `blacklisted` kernel modules. The reasoning behind this is that a blacklisted
 module can still be loaded manually with `modprobe module_name`. Using
 `install module_name /bin/true` prevents this.
 
-**Please note:** This will affect modules that the OS itself has blacklisted as
+This will affect modules that the distribution has blacklisted as
 part of its default setup, or that were added manually at some point, by anyone
 with access to your system. Please verify the affected modules before turning
-this on, under `/etc/modprobe.d/`.
+this on by running `modprobe --showconfig | grep '^blacklist'`
 
-This code project does not blacklist any modules, it only blocks/disables, as
-described in the first paragraph of this section.
-
-Note that disabling the `usb-storage` module will disable any usage of USB
-storage devices, if such devices are needed [USBGuard](https://github.com/USBGuard/usbguard),
-or a similar tool, should be configured accordingly.
+> **Note**
+>
+> Disabling the `usb-storage` module will disable all USB
+> storage devices. If such devices are needed [USBGuard](https://github.com/USBGuard/usbguard),
+> or a similar tool, should be configured accordingly.
 
 ### ./defaults/main/mount.yml
 
@@ -323,7 +343,9 @@ information otherwise prohibited by `hidepid=`.
 ```yaml
 enable_timesyncd: true
 fallback_ntp: 2.ubuntu.pool.ntp.org 3.ubuntu.pool.ntp.org
-ntp: 0.ubuntu.pool.ntp.org 1.ubuntu.pool.ntp.org
+ntp: "0.ubuntu.pool.ntp.org 1.ubuntu.pool.ntp.org"
+aws_fallback_ntp: "169.254.169.123"
+aws_ntp: "169.254.169.123"
 ```
 
 If `enable_timesyncd: true` then configure systemd
@@ -356,52 +378,54 @@ packages_blocklist:
   - yp-tools
   - ypbind
 packages_debian:
-  - acct
-  - apparmor-profiles
-  - apparmor-utils
-  - apt-show-versions
-  - audispd-plugins
+  # - acct
+  # - apparmor-profiles
+  # - apparmor-utils
+  # - apt-show-versions
+  # - audispd-plugins
   - auditd
   - cracklib-runtime
-  - debsums
-  - gnupg2
-  - haveged
-  - libpam-apparmor
-  - libpam-cap
-  - libpam-modules
+  # - debsums
+  # - gnupg2
+  # - haveged
+  # - libpam-apparmor
+  # - libpam-cap
+  # - libpam-modules
+  # We are only installing this package as it provides /etc/security/pwquality.conf
   - libpam-pwquality
-  - libpam-tmpdir
-  - lsb-release
-  - needrestart
-  - openssh-server
-  - postfix
-  - rkhunter
-  - rsyslog
-  - sysstat
-  - systemd-journal-remote
-  - tcpd
-  - vlock
-  - wamerican
+  # - libpam-tmpdir
+  # - lsb-release
+  # - needrestart
+  # - openssh-server
+  # - postfix
+  # - rkhunter
+  # - rsyslog
+  # - sysstat
+  # - systemd-journal-remote
+  # - tcpd
+  # - vlock
+  # - wamerican
 packages_redhat:
-  - audispd-plugins
+  # - audispd-plugins
   - audit
   - cracklib
-  - gnupg2
-  - haveged
+  # - gnupg2
+  # - haveged
   - libpwquality
-  - openssh-server
-  - needrestart
-  - postfix
-  - psacct
-  - rkhunter
-  - rsyslog
-  - rsyslog-gnutls
-  - systemd-journal-remote
-  - vlock
-  - words
+  # - openssh-server
+  # - needrestart
+  # - postfix
+  # - psacct
+  # - rkhunter
+  # - rsyslog
+  # - rsyslog-gnutls
+  # - systemd-journal-remote
+  # - vlock
+  # - words
 packages_ubuntu:
-  - fwupd
-  - secureboot-db
+  # - fwupd
+  # - secureboot-db
+  # We are listing this as we can't have null values
   - snapd
 ```
 
@@ -429,9 +453,6 @@ pwquality_config:
   ucredit: -1
 ```
 
-Set [cryptographic policies](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/security_hardening/using-the-system-wide-cryptographic-policies_security-hardening)
-if `/etc/crypto-policies/config` exists.
-
 Configure the [libpwquality](https://manpages.ubuntu.com/manpages/focal/man5/pwquality.conf.5.html)
 library.
 
@@ -440,24 +461,40 @@ library.
 ```yaml
 sshd_accept_env: LANG LC_*
 sshd_admin_net:
-  - 192.168.0.0/24
-  - 192.168.1.0/24
-sshd_allow_agent_forwarding: 'no'
+  - 0.0.0.0/0
+sshd_allow_agent_forwarding: "no"
 sshd_allow_groups: sudo
 sshd_allow_users: "{{ ansible_user }}"
-sshd_allow_tcp_forwarding: 'no'
+sshd_allow_tcp_forwarding: "no"
 sshd_authentication_methods: any
 sshd_banner: /etc/issue.net
-sshd_challenge_response_authentication: 'no'
+sshd_ca_signature_algorithms: >-
+  ecdsa-sha2-nistp256,
+  sk-ecdsa-sha2-nistp256@openssh.com,
+  ecdsa-sha2-nistp384,
+  ecdsa-sha2-nistp521,
+  ssh-ed25519,
+  sk-ssh-ed25519@openssh.com,
+  rsa-sha2-256,
+  rsa-sha2-512
+sshd_challenge_response_authentication: "no"
 sshd_ciphers: >-
   chacha20-poly1305@openssh.com,
   aes256-gcm@openssh.com,
-  aes256-ctr
-sshd_client_alive_count_max: 1
-sshd_client_alive_interval: 200
-sshd_compression: 'no'
-sshd_gssapi_authentication: 'no'
-sshd_hostbased_authentication: 'no'
+  aes128-gcm@openssh.com,
+  aes256-ctr,
+  aes192-ctr,
+  aes128-ctr
+sshd_client_alive_count_max: 3
+sshd_client_alive_interval: 15
+sshd_compression: "no"
+sshd_gssapi_authentication: "no"
+sshd_gssapi_kex_algorithms: >-
+  gss-curve25519-sha256-,
+  gss-nistp256-sha256-,
+  gss-group14-sha256-,
+  gss-group16-sha512-
+sshd_hostbased_authentication: "no"
 sshd_host_key_algorithms: >-
   ssh-ed25519-cert-v01@openssh.com,
   ssh-rsa-cert-v01@openssh.com,
@@ -469,10 +506,15 @@ sshd_host_key_algorithms: >-
   ecdsa-sha2-nistp521,
   ecdsa-sha2-nistp384,
   ecdsa-sha2-nistp256
-sshd_ignore_user_known_hosts: 'yes'
-sshd_kerberos_authentication: 'no'
+sshd_ignore_rhosts: "yes"
+sshd_ignore_user_known_hosts: "yes"
+sshd_kerberos_authentication: "no"
 sshd_kex_algorithms: >-
+  curve25519-sha256,
   curve25519-sha256@libssh.org,
+  diffie-hellman-group14-sha256,
+  diffie-hellman-group16-sha512,
+  diffie-hellman-group18-sha512,
   ecdh-sha2-nistp521,
   ecdh-sha2-nistp384,
   ecdh-sha2-nistp256,
@@ -485,24 +527,47 @@ sshd_macs: >-
   hmac-sha2-512,
   hmac-sha2-256
 sshd_max_auth_tries: 3
-sshd_max_sessions: 3
+sshd_max_sessions: 4
 sshd_max_startups: 10:30:60
-sshd_password_authentication: 'no'
-sshd_permit_empty_passwords: 'no'
-sshd_permit_root_login: 'no'
-sshd_permit_user_environment: 'no'
+sshd_password_authentication: "no"
+sshd_permit_empty_passwords: "no"
+sshd_permit_root_login: "no"
+sshd_permit_user_environment: "no"
 sshd_port: 22
-sshd_print_last_log: 'yes'
-sshd_print_motd: 'no'
+sshd_print_last_log: "yes"
+sshd_print_motd: "no"
+sshd_pubkey_accepted_algorithms: >-
+  ecdsa-sha2-nistp256,
+  ecdsa-sha2-nistp256-cert-v01@openssh.com,
+  sk-ecdsa-sha2-nistp256@openssh.com,
+  sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
+  ecdsa-sha2-nistp384,
+  ecdsa-sha2-nistp384-cert-v01@openssh.com,
+  ecdsa-sha2-nistp521,
+  ecdsa-sha2-nistp521-cert-v01@openssh.com,
+  ssh-ed25519,
+  ssh-ed25519-cert-v01@openssh.com,
+  sk-ssh-ed25519@openssh.com,
+  sk-ssh-ed25519-cert-v01@openssh.com,
+  rsa-sha2-256,
+  rsa-sha2-256-cert-v01@openssh.com,
+  rsa-sha2-512,
+  rsa-sha2-512-cert-v01@openssh.com
 sshd_rekey_limit: 512M 1h
 sshd_required_rsa_size: 2048
-sshd_strict_modes: 'yes'
+sshd_strict_modes: "yes"
 sshd_subsystem: sftp internal-sftp
-sshd_tcp_keep_alive: 'no'
-sshd_use_dns: 'no'
-sshd_use_pam: 'yes'
-sshd_x11_forwarding: 'no'
+sshd_tcp_keep_alive: "no"
+sshd_use_dns: "no"
+sshd_use_pam: "yes"
+sshd_x11_forwarding: "no"
 ```
+
+> **Note**
+>
+> `CASignatureAlgorithms`, `Ciphers`, `HostKeyAlgorithms`, `KexAlgorithms` and `MACs`
+> will be configured as defined by cryptographic policies if
+> `/etc/crypto-policies/config` exists and `set_crypto_policy: true`.
 
 For a explanation of the options not described below, please read
 [https://man.openbsd.org/sshd_config](https://man.openbsd.org/sshd_config).
@@ -561,7 +626,8 @@ If `suid_sgid_permissions: true` loop through `suid_sgid_blocklist` and remove
 any SUID/SGID permissions.
 
 A complete file list is available in
-[defaults/main/suid_sgid_blocklist.yml](defaults/main/suid_sgid_blocklist.yml).
+[defaults/main/suid_sgid_blocklist.yml](defaults/main/suid_sgid_blocklist.yml)
+and is based on the work by [@GTFOBins](https://github.com/GTFOBins).
 
 ### ./defaults/main/sysctl.yml
 
@@ -639,6 +705,38 @@ conntrack_sysctl_settings:
 
 [sysctl.conf](https://linux.die.net/man/5/sysctl.conf)
 
+### ./defaults/main/templates.yml
+
+```yaml
+adduser_conf_template: etc/adduser.conf.j2
+common_account_template: etc/pam.d/common-account.j2
+common_auth_template: etc/pam.d/common-auth.j2
+common_password_template: etc/pam.d/common-password.j2
+coredump_conf_template: etc/systemd/coredump.conf.j2
+hardening_rules_template: etc/audit/rules.d/hardening.rules.j2
+hosts_allow_template: etc/hosts.allow.j2
+hosts_deny_template: etc/hosts.deny.j2
+initpath_sh_template: etc/profile.d/initpath.sh.j2
+issue_template: etc/issue.j2
+journald_conf_template: etc/systemd/journald.conf.j2
+limits_conf_template: etc/security/limits.conf.j2
+logind_conf_template: etc/systemd/logind.conf.j2
+login_defs_template: etc/login.defs.j2
+login_template: etc/pam.d/login.j2
+logrotate_conf_template: etc/logrotate.conf.j2
+motd_template: etc/motd.j2
+resolved_conf_template: etc/systemd/resolved.conf.j2
+rkhunter_template: etc/default/rkhunter.j2
+ssh_config_template: etc/ssh/ssh_config.j2
+sshd_config_template: etc/ssh/sshd_config.j2
+system_conf_template: etc/systemd/system.conf.j2
+timesyncd_conf_template: etc/systemd/timesyncd.conf.j2
+useradd_template: etc/default/useradd.j2
+user_conf_template: etc/systemd/user.conf.j2
+```
+
+Paths in order to support overriding the default [role templates](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/template_module.html).
+
 ### ./defaults/main/ufw.yml
 
 ```yaml
@@ -660,7 +758,7 @@ allowing outgoing traffic.
 ### ./defaults/main/umask.yml
 
 ```yaml
-umask_value: "077"
+umask_value: "027"
 ```
 
 Set default [umask value](https://manpages.ubuntu.com/manpages/jammy/man2/umask.2.html).
