@@ -29,61 +29,6 @@ Available on
 
 None.
 
-## Examples
-
-### Playbook
-
-```yaml
----
-- hosts: localhost
-  any_errors_fatal: true
-  tasks:
-    - name: Include the hardening role
-      ansible.builtin.include_role:
-        name: konstruktoid.hardening
-      vars:
-        block_blacklisted: true
-        sshd_admin_net:
-          - 10.0.2.0/24
-          - 192.168.0.0/24
-          - 192.168.1.0/24
-        suid_sgid_permissions: false
-...
-```
-
-### ansible-pull with git checkout
-
-```yaml
----
-- hosts: localhost
-  any_errors_fatal: true
-  tasks:
-    - name: Install git
-      become: true
-      ansible.builtin.package:
-        name: git
-        state: present
-
-    - name: Checkout konstruktoid.hardening
-      become: true
-      ansible.builtin.git:
-        repo: 'https://github.com/konstruktoid/ansible-role-hardening'
-        dest: /etc/ansible/roles/konstruktoid.hardening
-        version: master
-
-    - name: Include the hardening role
-      ansible.builtin.include_role:
-        name: konstruktoid.hardening
-      vars:
-        block_blacklisted: true
-        sshd_admin_net:
-          - 10.0.2.0/24
-          - 192.168.0.0/24
-          - 192.168.1.0/24
-        suid_sgid_permissions: false
-...
-```
-
 ## Note regarding UFW firewall rules
 
 Instead of resetting `ufw` every run and by doing so causing network traffic
