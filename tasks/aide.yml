@@ -33,7 +33,7 @@
 - name: Install AIDE service
   become: true
   ansible.builtin.template:
-    src: lib/systemd/system/aidecheck.service.j2
+    src: "{{ aidecheck_service_template }}"
     dest: /lib/systemd/system/aidecheck.service
     backup: true
     mode: "0644"
@@ -46,7 +46,7 @@
 - name: Install AIDE timer
   become: true
   ansible.builtin.template:
-    src: lib/systemd/system/aidecheck.timer.j2
+    src: "{{ aidecheck_timer_template }}"
     dest: /lib/systemd/system/aidecheck.timer
     backup: true
     mode: "0644"
