@@ -35,9 +35,11 @@
 - name: Configure systemd journald and logrotate
   ansible.builtin.include_tasks: journalconf.yml
 
-- name: Configure systemd timesyncd
-  ansible.builtin.include_tasks: timesyncd.yml
-  when: enable_timesyncd
+# We (cisagov) don't want this functionality since we configure chrony
+# on all our instances and point it to the AWS time source.
+# - name: Configure systemd timesyncd
+#   ansible.builtin.include_tasks: timesyncd.yml
+#   when: enable_timesyncd
 
 # - name: Clean fstab
 #   ansible.builtin.include_tasks: fstab.yml
