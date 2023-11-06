@@ -70,8 +70,7 @@ packages_redhat:
   # - systemd-journal-remote
   # - vlock
   # - words
-packages_ubuntu:
+packages_ubuntu: []
   # - fwupd
   # - secureboot-db
-  # We are listing this as we can't have null values
-  - snapd
+  # - snapd
