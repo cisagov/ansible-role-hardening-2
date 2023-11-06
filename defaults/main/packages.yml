@@ -2,15 +2,18 @@
 system_upgrade: true
 packages_blocklist:
   - apport*
-  - autofs
-  - avahi*
-  - avahi-*
+# This package is required for freeipa-server on Fedora.
+#   - autofs
+# These packages are required for freeipa-server on Fedora.
+#   - avahi*
+#   - avahi-*
   - beep
   - git
   - pastebinit
   - popularity-contest
   - prelink
-  - rpcbind
+# This package is required for freeipa-server on Fedora.
+#  - rpcbind
   - rsh*
   - rsync
   - talk*
