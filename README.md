@@ -303,15 +303,18 @@ otherwise installing a NTP client is recommended.
 system_upgrade: true
 packages_blocklist:
   - apport*
-  - autofs
-  - avahi*
-  - avahi-*
+# This package is required for freeipa-server on Fedora.
+#   - autofs
+# These packages are required for freeipa-server on Fedora.
+#   - avahi*
+#   - avahi-*
   - beep
   - git
   - pastebinit
   - popularity-contest
   - prelink
-  - rpcbind
+# This package is required for freeipa-server on Fedora.
+#  - rpcbind
   - rsh*
   - rsync
   - talk*
@@ -368,11 +371,10 @@ packages_redhat:
   # - systemd-journal-remote
   # - vlock
   # - words
-packages_ubuntu:
+packages_ubuntu: []
   # - fwupd
   # - secureboot-db
-  # We are listing this as we can't have null values
-  - snapd
+  # - snapd
 ```
 
 `system_upgrade: 'yes'` will run `apt upgrade` or
