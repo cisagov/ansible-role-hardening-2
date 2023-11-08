@@ -11,6 +11,8 @@
     - CIS-UBUNTU2004-2.1.1.1
     - CIS-UBUNTU2004-2.1.1.2
 
+# We only want to modify the timesyncd configuration if it actually
+# exists.
 - name: Stat systemd timesyncd
   become: true
   ansible.builtin.stat:
