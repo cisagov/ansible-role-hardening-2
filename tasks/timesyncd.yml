@@ -4,7 +4,6 @@
   ansible.builtin.package:
     name: systemd-timesyncd
     state: present
-  when: ansible_os_family == "Debian"  
   tags:
     - systemd
     - timesyncd
