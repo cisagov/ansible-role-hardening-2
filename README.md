@@ -326,6 +326,7 @@ packages_blocklist:
   - yp-tools
   - ypbind
 packages_debian:
+  # We are only installing packages needed to support the tasks being run.
   # - acct
   # - apparmor-profiles
   # - apparmor-utils
@@ -354,6 +355,7 @@ packages_debian:
   # - vlock
   # - wamerican
 packages_redhat:
+  # We are only installing packages needed to support the tasks being run.
   # - audispd-plugins
   - audit
   - cracklib
@@ -372,6 +374,7 @@ packages_redhat:
   # - vlock
   # - words
 packages_ubuntu: []
+  # We are only installing packages needed to support the tasks being run.
   # - fwupd
   # - secureboot-db
   # - snapd
