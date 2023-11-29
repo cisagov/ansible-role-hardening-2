@@ -15,3 +15,55 @@
     regexp: ^(.*)floppy(.*)$
   tags:
     - fstab
+
+- name: >-
+    If /home is a separate mount, ensure that it is mounted with the
+    nodev option
+  become: true
+  block:
+    - name: Grab the contents of /etc/fstab
+      ansible.builtin.command:
+        cmd: cat /etc/fstab
+      changed_when: false
+      failed_when: cat_fstab.rc != 0
+      register: cat_fstab
+
+    - name: >-
+        Set a fact with the /home mount options, if such a mount exists
+      ansible.builtin.set_fact:
+        # Note that the result is a list containing at most one string
+        home_options: "{{ cat_fstab.stdout | regex_search('^(?P<device>\\S+)\\s+/home/?\\s+(?P<fs_type>\\S+)\\s+(?P<opts>\\S+)\\s+(?P<freq>\\d+)\\s+(?P<pass_no>\\d+)$', '\\g<opts>', multiline=True) }}"
+
+    - name: Add nodev option to /home mount in fstab
+      ansible.posix.mount:
+        fstype: "{{ item.fstype }}"
+        # Add "nodev" to the comma-delimited list of options
+        #
+        # I'd like to simply do:
+        # opts: "{{ item.options | split(',') | union(['nodev']) | join(',') }}"
+        # here, but once mounted the options as specified in
+        # ansible_mounts are:
+        # subvolid=257,bind,rw,ssd,relatime,seclabel,subvol=/home,compress=zstd:1,space_cache=v2.
+        # If I append "nodev" to this list then I end up with an AMI
+        # that never passes the "instance reachability" status check
+        # and is never reachable by Session Manager.  To work around
+        # this I have to grab the options as they are listed in
+        # /etc/fstab and then append "nodev" to that.
+        #
+        # Since we know (because of the loop condition) that we are
+        # dealing with a bona fide home mount, it is safe to index
+        # into the home_options fact here.
+        opts: "{{ home_options[0] + ',nodev' }}"
+        path: "{{ item.mount }}"
+        src: UUID={{ item.uuid }}
+        state: present
+      # We don't need to do anything if nodev is already present.
+      when: item.options | regex_search("nodev") is none
+      # This selects only the /home mount, if it exists
+      loop: "{{ ansible_mounts | selectattr('mount', 'equalto', '/home') | list }}"
+      # On Fedora, at least, /etc/fstab contains a note that says:
+      # After editing this file, run 'systemctl daemon-reload' to
+      # update systemd units generated from this file.
+      notify: Reload systemd
+  tags:
+    - fstab
