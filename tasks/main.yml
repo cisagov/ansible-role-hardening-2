@@ -2,12 +2,14 @@
 - name: Install local facts
   ansible.builtin.include_tasks: facts.yml
 
+# These tasks are not currently needed for our use case
 # - name: Configure systemd resolved
 #   ansible.builtin.include_tasks: resolvedconf.yml
 
 - name: Install epel-release and python dependencies
   ansible.builtin.include_tasks: pre.yml
 
+# These tasks are not currently needed for our use case
 # - name: Install and configure UFW
 #   ansible.builtin.include_tasks:
 #     file: ufw.yml
@@ -29,6 +31,7 @@
   ansible.builtin.include_tasks: ipv6.yml
   when: disable_ipv6
 
+# These tasks are not currently needed for our use case
 # - name: Configure systemd system and users
 #   ansible.builtin.include_tasks: systemdconf.yml
 
@@ -47,12 +50,15 @@
 - name: Configure shm and tmp mounts
   ansible.builtin.include_tasks: mount.yml
 
+# These tasks are not currently needed for our use case
 # - name: Disable prelink
 #   ansible.builtin.include_tasks: prelink.yml
 
+# These tasks are not currently needed for our use case
 # - name: Configure package managers, update caches and install updates
 #   ansible.builtin.include_tasks: packagemgmt.yml
 
+# These tasks are not currently needed for our use case
 # - name: Configure hosts.allow and hosts.deny
 #   ansible.builtin.include_tasks: hosts.yml
 
@@ -74,6 +80,7 @@
 - name: Configure and clean at and cron
   ansible.builtin.include_tasks: cron.yml
 
+# These tasks are not currently needed for our use case
 # - name: Disable systemd ctrl-alt-del.target
 #   ansible.builtin.include_tasks: ctrlaltdel.yml
 
@@ -105,9 +112,11 @@
 - name: Configure PAM
   ansible.builtin.include_tasks: password.yml
 
+# These tasks are not currently needed for our use case
 # - name: Manage users
 #   ansible.builtin.include_tasks: users.yml
 
+# These tasks are not currently needed for our use case
 # - name: Remove suid/sgid permissions
 #   ansible.builtin.include_tasks: suid.yml
 #   when: suid_sgid_permissions | bool
@@ -118,24 +127,30 @@
 - name: Configure paths
   ansible.builtin.include_tasks: path.yml
 
+# These tasks are not currently needed for our use case
 # - name: Configure systemd logind
 #   ansible.builtin.include_tasks: logindconf.yml
 
+# These tasks are not currently needed for our use case
 # - name: Configure rkhunter
 #   ansible.builtin.include_tasks: rkhunter.yml
 
 - name: Add issue message
   ansible.builtin.include_tasks: issue.yml
 
+# These tasks are not currently needed for our use case
 # - name: Configure apport
 #   ansible.builtin.include_tasks: apport.yml
 
+# These tasks are not currently needed for our use case
 # - name: Lock root account
 #   ansible.builtin.include_tasks: lockroot.yml
 
+# These tasks are not currently needed for our use case
 # - name: Configure Postfix
 #   ansible.builtin.include_tasks: postfix.yml
 
+# These tasks are not currently needed for our use case
 # - name: Configure motdnews
 #   ansible.builtin.include_tasks: motdnews.yml
 
@@ -145,6 +160,7 @@
 - name: Set umask
   ansible.builtin.include_tasks: umask.yml
 
+# These tasks are not currently needed for our use case
 # - name: Miscellaneous extra tasks
 #   ansible.builtin.include_tasks: extras.yml
 
