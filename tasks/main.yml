@@ -2,19 +2,21 @@
 - name: Install local facts
   ansible.builtin.include_tasks: facts.yml
 
-- name: Configure systemd resolved
-  ansible.builtin.include_tasks: resolvedconf.yml
+# These tasks are not currently needed for our use case
+# - name: Configure systemd resolved
+#   ansible.builtin.include_tasks: resolvedconf.yml
 
 - name: Install epel-release and python dependencies
   ansible.builtin.include_tasks: pre.yml
 
-- name: Install and configure UFW
-  ansible.builtin.include_tasks:
-    file: ufw.yml
-    apply:
-      environment:
-        PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-  when: ufw_enable
+# These tasks are not currently needed for our use case
+# - name: Install and configure UFW
+#   ansible.builtin.include_tasks:
+#     file: ufw.yml
+#     apply:
+#       environment:
+#         PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+#   when: ufw_enable
 
 - name: Configure sysctl
   ansible.builtin.include_tasks: sysctl.yml
@@ -29,15 +31,18 @@
   ansible.builtin.include_tasks: ipv6.yml
   when: disable_ipv6
 
-- name: Configure systemd system and users
-  ansible.builtin.include_tasks: systemdconf.yml
+# These tasks are not currently needed for our use case
+# - name: Configure systemd system and users
+#   ansible.builtin.include_tasks: systemdconf.yml
 
 - name: Configure systemd journald and logrotate
   ansible.builtin.include_tasks: journalconf.yml
 
-- name: Configure systemd timesyncd
-  ansible.builtin.include_tasks: timesyncd.yml
-  when: enable_timesyncd
+# We (cisagov) don't want this functionality since we configure chrony
+# on all our instances and point it to the AWS time source.
+# - name: Configure systemd timesyncd
+#   ansible.builtin.include_tasks: timesyncd.yml
+#   when: enable_timesyncd
 
 - name: Clean fstab
   ansible.builtin.include_tasks: fstab.yml
@@ -45,14 +50,17 @@
 - name: Configure shm and tmp mounts
   ansible.builtin.include_tasks: mount.yml
 
-- name: Disable prelink
-  ansible.builtin.include_tasks: prelink.yml
+# These tasks are not currently needed for our use case
+# - name: Disable prelink
+#   ansible.builtin.include_tasks: prelink.yml
 
-- name: Configure package managers, update caches and install updates
-  ansible.builtin.include_tasks: packagemgmt.yml
+# These tasks are not currently needed for our use case
+# - name: Configure package managers, update caches and install updates
+#   ansible.builtin.include_tasks: packagemgmt.yml
 
-- name: Configure hosts.allow and hosts.deny
-  ansible.builtin.include_tasks: hosts.yml
+# These tasks are not currently needed for our use case
+# - name: Configure hosts.allow and hosts.deny
+#   ansible.builtin.include_tasks: hosts.yml
 
 - name: Configure login.defs
   ansible.builtin.include_tasks: logindefs.yml
@@ -69,17 +77,12 @@
 - name: Configure needrestart, install and remove various packages
   ansible.builtin.include_tasks: packages.yml
 
-- name: Configure ssh server and client
-  ansible.builtin.include_tasks: sshconfig.yml
-
-- name: Configure PAM
-  ansible.builtin.include_tasks: password.yml
-
 - name: Configure and clean at and cron
   ansible.builtin.include_tasks: cron.yml
 
-- name: Disable systemd ctrl-alt-del.target
-  ansible.builtin.include_tasks: ctrlaltdel.yml
+# These tasks are not currently needed for our use case
+# - name: Disable systemd ctrl-alt-del.target
+#   ansible.builtin.include_tasks: ctrlaltdel.yml
 
 - name: Configure auditd
   ansible.builtin.include_tasks: auditd.yml
@@ -103,48 +106,63 @@
     (ansible_lsb.codename == "groovy" or
     ansible_lsb.codename == "hirsute")))
 
-- name: Manage users
-  ansible.builtin.include_tasks: users.yml
+- name: Configure ssh server and client
+  ansible.builtin.include_tasks: sshconfig.yml
 
-- name: Remove suid/sgid permissions
-  ansible.builtin.include_tasks: suid.yml
-  when: suid_sgid_permissions | bool
+- name: Configure PAM
+  ansible.builtin.include_tasks: password.yml
+
+# These tasks are not currently needed for our use case
+# - name: Manage users
+#   ansible.builtin.include_tasks: users.yml
+
+# These tasks are not currently needed for our use case
+# - name: Remove suid/sgid permissions
+#   ansible.builtin.include_tasks: suid.yml
+#   when: suid_sgid_permissions | bool
 
 - name: Configure compiler permissions
   ansible.builtin.include_tasks: compilers.yml
 
-- name: Set umask
-  ansible.builtin.include_tasks: umask.yml
-
 - name: Configure paths
   ansible.builtin.include_tasks: path.yml
 
-- name: Configure systemd logind
-  ansible.builtin.include_tasks: logindconf.yml
+# These tasks are not currently needed for our use case
+# - name: Configure systemd logind
+#   ansible.builtin.include_tasks: logindconf.yml
 
-- name: Configure rkhunter
-  ansible.builtin.include_tasks: rkhunter.yml
+# These tasks are not currently needed for our use case
+# - name: Configure rkhunter
+#   ansible.builtin.include_tasks: rkhunter.yml
 
 - name: Add issue message
   ansible.builtin.include_tasks: issue.yml
 
-- name: Configure apport
-  ansible.builtin.include_tasks: apport.yml
+# These tasks are not currently needed for our use case
+# - name: Configure apport
+#   ansible.builtin.include_tasks: apport.yml
 
-- name: Lock root account
-  ansible.builtin.include_tasks: lockroot.yml
+# These tasks are not currently needed for our use case
+# - name: Lock root account
+#   ansible.builtin.include_tasks: lockroot.yml
 
-- name: Configure Postfix
-  ansible.builtin.include_tasks: postfix.yml
+# These tasks are not currently needed for our use case
+# - name: Configure Postfix
+#   ansible.builtin.include_tasks: postfix.yml
 
-- name: Configure motdnews
-  ansible.builtin.include_tasks: motdnews.yml
+# These tasks are not currently needed for our use case
+# - name: Configure motdnews
+#   ansible.builtin.include_tasks: motdnews.yml
 
 - name: Configure sudo
   ansible.builtin.include_tasks: sudo.yml
 
-- name: Miscellaneous extra tasks
-  ansible.builtin.include_tasks: extras.yml
+- name: Set umask
+  ansible.builtin.include_tasks: umask.yml
+
+# These tasks are not currently needed for our use case
+# - name: Miscellaneous extra tasks
+#   ansible.builtin.include_tasks: extras.yml
 
 - name: Miscellaneous tasks after all handlers
   ansible.builtin.include_tasks: post.yml

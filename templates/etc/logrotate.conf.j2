@@ -6,7 +6,7 @@ daily
 su root syslog
 {% endif %}
 rotate 7
-create
+create 0640 root utmp
 dateext
 compress
 

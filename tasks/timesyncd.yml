@@ -10,15 +10,24 @@
     - CIS-UBUNTU2004-2.1.1.1
     - CIS-UBUNTU2004-2.1.1.2
 
+# We only want to modify the timesyncd configuration if it actually
+# exists.
+- name: Stat systemd timesyncd
+  become: true
+  ansible.builtin.stat:
+    path: /etc/systemd/timesyncd.conf
+  register: timesyncd   
+
 - name: Configure systemd timesyncd
   become: true
   ansible.builtin.template:
-    src: etc/systemd/timesyncd.conf.j2
+    src: "{{ timesyncd_conf_template }}"
     dest: /etc/systemd/timesyncd.conf
     backup: true
     mode: "0644"
     owner: root
     group: root
+  when: timesyncd.stat.exists  
   notify:
     - Reload systemd
   tags:
@@ -34,6 +43,7 @@
     enabled: true
     masked: false
     state: started
+  when: timesyncd.stat.exists  
   tags:
     - systemd
     - timesyncd

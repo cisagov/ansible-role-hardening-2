@@ -116,8 +116,10 @@
     name: "{{ packages_redhat }}"
     state: present
   when: ansible_os_family == "RedHat"
-  notify:
-    - Enable haveged
+  # The haveged package was commented out in tasks/packages.yml by
+  # @bra1ncramp in commit bbffe17e, so we shouldn't call this handler.
+  # notify:
+  #   - Enable haveged
   tags:
     - packages
     - CCE-80847-7

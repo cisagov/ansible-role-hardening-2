@@ -71,7 +71,7 @@
 - name: Configure sshd
   become: true
   ansible.builtin.template:
-    src: etc/ssh/sshd_config.j2
+    src: "{{ sshd_config_template }}"
     dest: /etc/ssh/sshd_config
     backup: true
     mode: "0600"
@@ -125,7 +125,7 @@
 - name: Configure sshd using sshd_config.d
   become: true
   ansible.builtin.template:
-    src: etc/ssh/sshd_config.j2
+    src: "{{ sshd_config_template }}"
     dest: /etc/ssh/sshd_config.d/01-hardening.conf
     backup: true
     mode: "0600"
@@ -229,7 +229,7 @@
 - name: Configure ssh client
   become: true
   ansible.builtin.template:
-    src: etc/ssh/ssh_config.j2
+    src: "{{ ssh_config_template }}"
     dest: /etc/ssh/ssh_config
     backup: true
     mode: "0644"
@@ -240,3 +240,21 @@
     - ssh_config
     - CCE-82880-6
     - M1041
+
+# # We are testing upstream's implementation of this prior to enabling the below code.
+# # Certain OS families (i.e. RedHat) use this file rather than /etc/ssh/sshd_config for cryptographic policies.
+# - name: Check if opensshserver.txt exists
+#   ansible.builtin.stat:
+#     path: /usr/share/crypto-policies/DEFAULT/opensshserver.txt
+#   register: opensshserver
+
+# - name: Configure opensshserver.txt client
+#   become: true
+#   ansible.builtin.template:
+#     src: "{{ opensshserver_txt_template }}"
+#     dest: /usr/share/crypto-policies/DEFAULT/opensshserver.txt
+#     backup: true
+#     mode: "0644"
+#     owner: root
+#     group: root
+#   when: opensshserver.stat.exists

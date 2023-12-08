@@ -1,23 +1,39 @@
 ---
 sshd_accept_env: LANG LC_*
 sshd_admin_net:
-  - 192.168.0.0/24
-  - 192.168.1.0/24
+  - 0.0.0.0/0
 sshd_allow_agent_forwarding: "no"
 sshd_allow_groups: sudo
 sshd_allow_users: "{{ ansible_user }}"
 sshd_allow_tcp_forwarding: "no"
 sshd_authentication_methods: any
 sshd_banner: /etc/issue.net
+sshd_ca_signature_algorithms: >-
+  ecdsa-sha2-nistp256,
+  sk-ecdsa-sha2-nistp256@openssh.com,
+  ecdsa-sha2-nistp384,
+  ecdsa-sha2-nistp521,
+  ssh-ed25519,
+  sk-ssh-ed25519@openssh.com,
+  rsa-sha2-256,
+  rsa-sha2-512
 sshd_challenge_response_authentication: "no"
 sshd_ciphers: >-
   chacha20-poly1305@openssh.com,
   aes256-gcm@openssh.com,
-  aes256-ctr
-sshd_client_alive_count_max: 1
-sshd_client_alive_interval: 200
+  aes128-gcm@openssh.com,
+  aes256-ctr,
+  aes192-ctr,
+  aes128-ctr
+sshd_client_alive_count_max: 3
+sshd_client_alive_interval: 15
 sshd_compression: "no"
 sshd_gssapi_authentication: "no"
+sshd_gssapi_kex_algorithms: >-
+  gss-curve25519-sha256-,
+  gss-nistp256-sha256-,
+  gss-group14-sha256-,
+  gss-group16-sha512-
 sshd_hostbased_authentication: "no"
 sshd_host_key_algorithms: >-
   ssh-ed25519-cert-v01@openssh.com,
@@ -30,10 +46,15 @@ sshd_host_key_algorithms: >-
   ecdsa-sha2-nistp521,
   ecdsa-sha2-nistp384,
   ecdsa-sha2-nistp256
+sshd_ignore_rhosts: "yes"
 sshd_ignore_user_known_hosts: "yes"
 sshd_kerberos_authentication: "no"
 sshd_kex_algorithms: >-
+  curve25519-sha256,
   curve25519-sha256@libssh.org,
+  diffie-hellman-group14-sha256,
+  diffie-hellman-group16-sha512,
+  diffie-hellman-group18-sha512,
   ecdh-sha2-nistp521,
   ecdh-sha2-nistp384,
   ecdh-sha2-nistp256,
@@ -46,7 +67,7 @@ sshd_macs: >-
   hmac-sha2-512,
   hmac-sha2-256
 sshd_max_auth_tries: 3
-sshd_max_sessions: 3
+sshd_max_sessions: 4
 sshd_max_startups: 10:30:60
 sshd_password_authentication: "no"
 sshd_permit_empty_passwords: "no"
@@ -55,6 +76,23 @@ sshd_permit_user_environment: "no"
 sshd_port: 22
 sshd_print_last_log: "yes"
 sshd_print_motd: "no"
+sshd_pubkey_accepted_algorithms: >-
+  ecdsa-sha2-nistp256,
+  ecdsa-sha2-nistp256-cert-v01@openssh.com,
+  sk-ecdsa-sha2-nistp256@openssh.com,
+  sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,
+  ecdsa-sha2-nistp384,
+  ecdsa-sha2-nistp384-cert-v01@openssh.com,
+  ecdsa-sha2-nistp521,
+  ecdsa-sha2-nistp521-cert-v01@openssh.com,
+  ssh-ed25519,
+  ssh-ed25519-cert-v01@openssh.com,
+  sk-ssh-ed25519@openssh.com,
+  sk-ssh-ed25519-cert-v01@openssh.com,
+  rsa-sha2-256,
+  rsa-sha2-256-cert-v01@openssh.com,
+  rsa-sha2-512,
+  rsa-sha2-512-cert-v01@openssh.com
 sshd_rekey_limit: 512M 1h
 sshd_required_rsa_size: 2048
 sshd_strict_modes: "yes"
