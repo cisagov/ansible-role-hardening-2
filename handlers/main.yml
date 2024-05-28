@@ -11,9 +11,55 @@
 # https://github.com/ansible/ansible/issues/22171
 - name: Restart RedHat auditd # noqa command-instead-of-module
   become: true
-  ansible.builtin.command: service auditd restart
-  register: service_auditd_restart
-  changed_when: service_auditd_restart.rc == 0
+  block:
+    - name: Restart RedHat auditd # noqa command-instead-of-module
+      ansible.builtin.command: service auditd restart
+      register: service_auditd_restart
+      changed_when: service_auditd_restart.rc == 0
+      failed_when: false # service_auditd_restart.rc != 0
+  # always:
+    - name: Debug
+      ansible.builtin.debug:
+        var: service_auditd_restart
+      listen: "Restart RedHat auditd"
+    - name: Gather logs
+      ansible.builtin.command: journalctl --boot --catalog --no-pager --unit audit-rules.service
+      register: journalctl
+      listen: "Restart RedHat auditd"
+    - name: Print logs
+      ansible.builtin.debug:
+        var: journalctl
+      listen: "Restart RedHat auditd"
+    - name: Gather dependencies
+      ansible.builtin.command: systemctl list-dependencies auditd.service
+      register: systemctl
+      listen: "Restart RedHat auditd"
+    - name: Print dependencies
+      ansible.builtin.debug:
+        var: systemctl
+      listen: "Restart RedHat auditd"
+    - name: Gather status
+      ansible.builtin.command: systemctl list-units --failed
+      register: systemctl
+      listen: "Restart RedHat auditd"
+    - name: Print status
+      ansible.builtin.debug:
+        var: systemctl
+      listen: "Restart RedHat auditd"
+    - name: Load /etc/audit/rules.d/*
+      ansible.builtin.command: "{{ auditctl -R item }}"
+      listen: "Restart RedHat auditd"
+      loop: "{{ lookup('ansible.builtin.fileglob', '/etc/audit/rules.d/*') }}"
+      register: auditctl
+    - name: Print auditctl
+      ansible.builtin.debug:
+        var: auditctl
+      listen: "Restart RedHat auditd"
+    - name: Print contents of /etc/audit/rules.d/*
+      ansible.builtin.debug:
+        msg: "{{ item - lookup('ansible.builtin.file', item) }}"
+      listen: "Restart RedHat auditd"
+      loop: "{{ lookup('ansible.builtin.fileglob', '/etc/audit/rules.d/*') }}"
   when: ansible_os_family == "RedHat"
   tags:
     - CCE-80872-5
