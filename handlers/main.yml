@@ -14,6 +14,22 @@
   ansible.builtin.command: service auditd restart
   register: service_auditd_restart
   changed_when: service_auditd_restart.rc == 0
+  failed_when:
+    - service_auditd_restart.rc != 0
+    # auditd.service depends on audit-rules.service.  The latter runs
+    # augenrules, which returns a non-zero value because some rules in
+    # templates/etc/audit/rules.d/hardening.rules.j2 mention files
+    # that do not exist.  This means that the restart of
+    # auditd.service returns a non-zero code because one of its
+    # dependencies "fails".
+    #
+    # We don't want this handler to fail because of this non-zero
+    # return code, particularly since
+    # templates/etc/audit/rules.d/hardening.rules.j2 contains a -c
+    # which means all audit rules are processed.  The only thing to do
+    # is to ignore the non-zero return code from the auditd.service
+    # restart.
+    - service_auditd_restart.rc != 1
   when: ansible_os_family == "RedHat"
   tags:
     - CCE-80872-5
