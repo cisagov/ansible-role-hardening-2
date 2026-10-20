@@ -131,7 +131,6 @@
     mode: "0600"
     owner: root
     group: root
-    validate: sshd -t -f %s
   when: sshd_config_d.stat.exists and grep_include.rc == 0
   notify:
     - Restart sshd service
